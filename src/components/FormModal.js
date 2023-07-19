@@ -13,7 +13,7 @@ import apiService from '../app/apiService';
 import Joi from 'joi';
 import moment from 'moment';
 
-const initial_form = { make: '', model: '', release_date: '', transmission_type: '', price: 0, size: '', style: '' };
+const initial_form = { make: '', model: '', year: '', transmission_type: '', price: 0, size: '', style: '' };
 
 export default function FormModal({ open, handleClose, mode, selectedCar, modalKey, refreshData }) {
 	const [form, setForm] = useState(initial_form);
@@ -21,7 +21,7 @@ export default function FormModal({ open, handleClose, mode, selectedCar, modalK
 	const schema = Joi.object({
 		make: Joi.string().required(),
 		model: Joi.string().required(),
-		release_date: Joi.number().integer().min(1900).max(new Date().getFullYear()).required(),
+		year: Joi.number().integer().min(1900).max(new Date().getFullYear()).required(),
 		transmission_type: Joi.string().valid('MANUAL', 'AUTOMATIC', 'AUTOMATED_MANUAL', 'DIRECT_DRIVE', 'UNKNOWN').required(),
 		price: Joi.number().integer().min(1000).required(),
 		size: Joi.string().valid('Compact', 'Midsize', 'Large').required(),
@@ -61,6 +61,10 @@ export default function FormModal({ open, handleClose, mode, selectedCar, modalK
 			// handleClose();
 		}
 	};
+	const handleYearChange = (newValue) => {
+		setForm({ ...form, year: moment(newValue).year() });
+	  };
+	  
 	useEffect(() => {
 		if (selectedCar?._id) {
 			setErrors({});
@@ -144,12 +148,10 @@ export default function FormModal({ open, handleClose, mode, selectedCar, modalK
 							<DatePicker
 								views={['year']}
 								label="Year"
-								value={moment(form.release_date.toString()).format('YYYY')}
-								error={errors.release_date}
-								onChange={(newValue) => {
-									setForm({ ...form, release_date: moment(newValue).year() });
-								}}
-								renderInput={(params) => <TextField {...params} helperText={errors.release_date ? errors.release_date : null} />}
+								value={moment(form.year, 'YYYY').toDate()}
+								error={errors.year}
+								onChange={handleYearChange}
+								renderInput={(params) => <TextField {...params} helperText={errors.year ? errors.year : null} />}
 							/>
 
 							<TextField

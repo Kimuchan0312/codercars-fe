@@ -40,11 +40,11 @@ const HomePage = () => {
     }
   };
   const name =
-    selectedCar?.release_date +
+    selectedCar?.Year +
     " " +
-    selectedCar?.make +
+    selectedCar?.Make +
     " " +
-    selectedCar?.model;
+    selectedCar?.Model;
   const columns = [
     { field: "name", headerName: "Name", flex: 3, minWidth: 120 },
     { field: "style", headerName: "Style", flex: 1, minWidth: 120 },
@@ -56,7 +56,7 @@ const HomePage = () => {
       minWidth: 120,
     },
     { field: "price", headerName: "Price", flex: 1, minWidth: 80 },
-    { field: "release_date", headerName: "Year", flex: 1, minWidth: 80 },
+    { field: "year", headerName: "Year", flex: 1, minWidth: 80 },
     {
       field: "id",
       headerName: "Edit/Delete",
@@ -77,20 +77,20 @@ const HomePage = () => {
   ];
   const rows = cars.map((car) => ({
     id: car._id,
-    name: car.make + " " + car.model,
-    size: car.size,
-    style: car.style,
-    transmission_type: car.transmission_type,
-    price: car.price,
-    release_date: car.release_date,
+    name: car.Make + " " + car.Model,
+    size: car['Vehicle Size'],
+    style: car['Vehicle Style'],
+    transmission_type: car['Transmission Type'],
+    price: car['MSRP'],
+    year: car.Year,
   }));
 
   const getData =
     useCallback(
       async () => {
     const res = await apiService.get(`/cars?page=${page}`);
-    setCars(res.data.cars);
-    setTotalPages(res.data.total);
+    setCars(res.cars);
+    setTotalPages(res.total);
       }
       , [page]);
 
